@@ -1,39 +1,14 @@
 import 'dart:async';
+import 'package:clothing_shop/providers/banner_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'app_colors.dart';
 
-// Model representing each banner slide
-class BannerItem {
-  final String tag;
-  final String title;
-  final String subtitle;
-  final String buttonText;
-  final List<Color> gradientColors;
-  final Color tagColor;
-  final Color buttonBgColor;
-  final Color buttonTextColor;
-  final VoidCallback? onTap;
-
-  BannerItem({
-    required this.tag,
-    required this.title,
-    required this.subtitle,
-    required this.buttonText,
-    required this.gradientColors,
-    this.tagColor = AppColors.gold,
-    this.buttonBgColor = AppColors.gold,
-    this.buttonTextColor = AppColors.forestDark,
-    this.onTap,
-  });
-}
-
 class BannerSlider extends StatefulWidget {
-  final List<BannerItem> banners;
   final Duration autoSlideInterval;
 
   const BannerSlider({
     super.key,
-    required this.banners,
     this.autoSlideInterval = const Duration(seconds: 4),
   });
 
@@ -55,8 +30,11 @@ class _BannerSliderState extends State<BannerSlider> {
 
   void _startAutoSlider() {
     _bannerTimer = Timer.periodic(widget.autoSlideInterval, (timer) {
-      if (_pageController.hasClients && widget.banners.isNotEmpty) {
-        int nextIndex = (_currentBannerIndex + 1) % widget.banners.length;
+      // Access provider list safely inside the timer
+      final banners = context.read<BannerProvider>().banners;
+
+      if (_pageController.hasClients && banners.isNotEmpty) {
+        int nextIndex = (_currentBannerIndex + 1) % banners.length;
         _pageController.animateToPage(
           nextIndex,
           duration: const Duration(milliseconds: 400),
@@ -75,7 +53,9 @@ class _BannerSliderState extends State<BannerSlider> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.banners.isEmpty) return const SizedBox.shrink();
+    final bannerProvider = context.watch<BannerProvider>();
+    final banners = bannerProvider.banners;
+    if (banners.isEmpty) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -88,9 +68,9 @@ class _BannerSliderState extends State<BannerSlider> {
                 _currentBannerIndex = index;
               });
             },
-            itemCount: widget.banners.length,
+            itemCount: banners.length,
             itemBuilder: (context, index) {
-              final banner = widget.banners[index];
+              final banner = banners[index];
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 padding: const EdgeInsets.all(20),
@@ -171,7 +151,7 @@ class _BannerSliderState extends State<BannerSlider> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(
-            widget.banners.length,
+            banners.length,
             (index) => AnimatedContainer(
               duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.symmetric(horizontal: 3),

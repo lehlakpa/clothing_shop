@@ -6,89 +6,7 @@ class ProductProvider extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Local fallback items in case Firestore is empty or offline
-  List<ProductModel> _products = [
-    ProductModel(
-      name: "Speckled Ceramic Mug",
-      maker: "Kinstugi Pottery Co.",
-      description:
-          "Hand-thrown stoneware mug with a reactive speckled glaze and comfortable grip handle.",
-      price: 34.00,
-      category: "Ceramics",
-      colors: ["Cream", "Sand", "Oatmeal"],
-    ),
-    ProductModel(
-      name: "Handwoven Wool Throw",
-      maker: "Atlas Weavers Guild",
-      description:
-          "Ultra-soft Merino wool blanket ethically hand-woven on traditional wooden looms.",
-      price: 120.00,
-      category: "Textiles",
-      colors: ["Terracotta", "Forest Green", "Charcoal"],
-    ),
-    ProductModel(
-      name: "Carved Walnut Bowl",
-      maker: "Timber & Grain Woodcraft",
-      description:
-          "Sustainably harvested solid black walnut serving bowl finished with food-safe organic oil.",
-      price: 68.00,
-      category: "Wood",
-      colors: ["Dark Walnut", "Natural Grain"],
-    ),
-    ProductModel(
-      name: "Amber Glass Decanter",
-      maker: "Solstice Glass Workshop",
-      description:
-          "Hand-blown amber tinted glass decanter designed for aerating wine or displaying cold drinks.",
-      price: 55.00,
-      category: "Glass",
-      colors: ["Warm Amber", "Smoked Gray"],
-    ),
-    ProductModel(
-      name: "Pendant Lantern Light",
-      maker: "Lumen Studio",
-      description:
-          "Minimalist brass and frosted glass pendant lamp cast to create warm ambient illumination.",
-      price: 145.00,
-      category: "Light",
-      colors: ["Brushed Brass", "Matte Black"],
-    ),
-    ProductModel(
-      name: "Terracotta Flower Vase",
-      maker: "Terra Clay House",
-      description:
-          "Earthy raw clay vase with a waterproof interior coating, ideal for dried or fresh stems.",
-      price: 42.00,
-      category: "Ceramics",
-      colors: ["Rust", "Desert Sand"],
-    ),
-    ProductModel(
-      name: "Linen Table Runner",
-      maker: "Heritage Loom Works",
-      description:
-          "100% organic stonewashed European linen table runner with delicate fringe details.",
-      price: 38.00,
-      category: "Textiles",
-      colors: ["Sage", "Off-White", "Dusty Rose"],
-    ),
-    ProductModel(
-      name: "Oak Serving Board",
-      maker: "Timber & Grain Woodcraft",
-      description:
-          "Heavyweight white oak charcuterie board featuring a hand-sculpted handle and hanging loop.",
-      price: 48.00,
-      category: "Wood",
-      colors: ["Natural Oak"],
-    ),
-    ProductModel(
-      name: "Fluted Glass Tumblers",
-      maker: "Solstice Glass Workshop",
-      description:
-          "Set of 2 ribbed glass tumblers heat-tempered for both hot espresso and iced beverages.",
-      price: 28.00,
-      category: "Glass",
-      colors: ["Clear Glass", "Olive Tint"],
-    ),
-  ];
+  List<ProductModel> _products = [];
 
   bool _isLoading = false;
 
@@ -96,14 +14,20 @@ class ProductProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   /// Stream real-time updates from Firestore. Falls back to static list if Firestore is empty.
+  /// Stream real-time updates from Firestore. Updates local lists automatically.
   Stream<List<ProductModel>> productsStream() {
     return _firestore.collection('products').snapshots().map((snapshot) {
-      if (snapshot.docs.isEmpty) {
-        return _products; // Return local default list if DB is empty
+      if (snapshot.docs.isNotEmpty) {
+        _products = snapshot.docs
+            .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
+            .toList();
+
+        // Ensure active search results stay updated when Stream emits
+        if (_searchResults.isEmpty) {
+          _searchResults = _products;
+        }
       }
-      return snapshot.docs
-          .map((doc) => ProductModel.fromMap(doc.data(), doc.id))
-          .toList();
+      return _products;
     });
   }
 
@@ -121,6 +45,42 @@ class ProductProvider extends ChangeNotifier {
       }
     } catch (e) {
       debugPrint("Fetch products error: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  /// Add a new product to Firestore
+  Future<bool> addProduct(ProductModel product) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      // Firestore automatically generates a unique Document ID
+      final docRef = await _firestore
+          .collection('products')
+          .add(product.toMap());
+
+      // Update the local product instance with the newly created ID
+      final newProduct = ProductModel(
+        id: docRef.id,
+        name: product.name,
+        maker: product.maker,
+        description: product.description,
+        price: product.price,
+        category: product.category,
+        colors: product.colors,
+        rating: product.rating,
+        reviews: product.reviews,
+        imageUrl: product.imageUrl,
+      );
+
+      _products.add(newProduct);
+      return true;
+    } catch (e) {
+      debugPrint("Error adding product: $e");
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

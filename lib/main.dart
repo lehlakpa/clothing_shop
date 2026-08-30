@@ -1,3 +1,5 @@
+import 'package:clothing_shop/providers/banner_provider.dart';
+import 'package:clothing_shop/widgets/custom_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,8 +10,6 @@ import 'providers/product_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/wishlist_provider.dart';
 
-import 'screens/home_screen.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -19,9 +19,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProductProvider()),
-
+        ChangeNotifierProvider(create: (_) => BannerProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
-
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
       ],
       child: const KiooApp(),
@@ -48,7 +47,7 @@ class KiooApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: const HomeScreen(),
+      home: CustomNavigation(),
     );
   }
 }

@@ -3,37 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart_provider.dart';
 import '../widgets/app_colors.dart';
-import '../widgets/bottom_nav.dart';
 import '../widgets/swatch_widget.dart';
-import 'home_screen.dart';
-import 'profile_screen.dart';
 
 class BagScreen extends StatelessWidget {
   const BagScreen({super.key});
-
-  void _onTabTapped(BuildContext context, int index) {
-    if (index == 2) return; // Currently on Bag tab
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-        break;
-      case 1:
-        // Category / Search screen routing logic
-        break;
-      case 2:
-        break;
-      case 3:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        );
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -154,10 +127,6 @@ class BagScreen extends StatelessWidget {
           ),
           _checkout(context, cart),
         ],
-      ),
-      bottomNavigationBar: BottomNav(
-        currentIndex: 2,
-        onTap: (index) => _onTabTapped(context, index),
       ),
     );
   }

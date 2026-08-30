@@ -1,15 +1,14 @@
 import 'package:clothing_shop/models/product_model.dart';
-import 'package:clothing_shop/widgets/custom_buttom_navigation.dart';
+import 'package:clothing_shop/screens/add_screen.dart';
+import 'package:clothing_shop/screens/product_details_screen.dart';
+import 'package:clothing_shop/widgets/custom_banner.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_provider.dart';
 import '../widgets/app_colors.dart';
-import '../widgets/bottom_nav.dart'; // Ensure correct path to your BottomNav widget
 import '../widgets/custom_headcer.dart';
 import '../widgets/product_card.dart';
-import 'bag_screen.dart';
-import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,72 +18,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex = 0;
   final TextEditingController searchController = TextEditingController();
-
-  final List<BannerItem> banners = [
-    BannerItem(
-      tag: 'AUTUMN STUDIO SALE',
-      title: 'Fired, woven & carved this week',
-      subtitle: '15% off new arrivals from 12 small studios.',
-      buttonText: 'Browse the sale',
-      gradientColors: [AppColors.forest, AppColors.forestDark],
-      tagColor: AppColors.gold,
-      buttonBgColor: AppColors.gold,
-      buttonTextColor: AppColors.forestDark,
-    ),
-    BannerItem(
-      tag: 'HANDMADE TEXTILES',
-      title: 'Artisan rugs & throw blankets',
-      subtitle: 'Sustainably sourced wool crafted by local weavers.',
-      buttonText: 'Explore Collection',
-      gradientColors: const [Color(0xFF8C533E), Color(0xFF593122)],
-      tagColor: const Color(0xFFF2C94C),
-      buttonBgColor: const Color(0xFFF2C94C),
-      buttonTextColor: const Color(0xFF331D15),
-    ),
-    BannerItem(
-      tag: 'FEATURED MAKER',
-      title: 'Minimalist Glassware Series',
-      subtitle: 'Hand-blown glass pieces designed for everyday elegance.',
-      buttonText: 'Meet the Maker',
-      gradientColors: const [Color(0xFF2C4C5E), Color(0xFF162B37)],
-      tagColor: const Color(0xFF81D4FA),
-      buttonBgColor: const Color(0xFF81D4FA),
-      buttonTextColor: const Color(0xFF0D1B2A),
-    ),
-  ];
 
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
-  }
-
-  void _onTabTapped(int index) {
-    if (currentIndex == index) return;
-
-    setState(() {
-      currentIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        // Current tab: Home
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const BagScreen()),
-        );
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        );
-        break;
-    }
   }
 
   @override
@@ -93,6 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.paper,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const AddProductScreen()),
+        ),
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 100),
@@ -130,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.read<ProductProvider>().searchProducts(
                               query: value,
                             );
-                            setState(() {});
                           },
                           decoration: const InputDecoration(
                             hintText: 'Search studios, materials, makers',
@@ -150,7 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.read<ProductProvider>().searchProducts(
                               query: '',
                             );
-                            setState(() {});
                           },
                           icon: const Icon(
                             Icons.close,
@@ -165,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 16),
 
                 // BANNER
-                BannerSlider(banners: banners),
+                const BannerSlider(),
 
                 const SizedBox(height: 22),
 
@@ -195,37 +139,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 12),
 
-                // PRODUCTS
+                // PRODUCTS STREAM
                 StreamBuilder<List<ProductModel>>(
                   stream: productProvider.productsStream(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting &&
+                        productProvider.products.isEmpty) {
                       return const Padding(
                         padding: EdgeInsets.all(30),
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.blueAccent,
+                          ),
+                        ),
                       );
                     }
 
                     if (snapshot.hasError) {
                       return const Padding(
                         padding: EdgeInsets.all(30),
+
                         child: Center(child: Text('Something went wrong')),
                       );
                     }
 
-                    final products = snapshot.data ?? [];
+                    // Use active search results if search bar has input, else snapshot stream items
+                    final displayedProducts = searchController.text.isNotEmpty
+                        ? productProvider.searchResults
+                        : (snapshot.data ?? []);
 
-                    if (products.isEmpty) {
+                    if (displayedProducts.isEmpty) {
                       return const Padding(
                         padding: EdgeInsets.all(30),
-                        child: Center(child: Text('No products found')),
+                        child: Center(
+                          child: Text('No products available right now.'),
+                        ),
                       );
                     }
 
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      itemCount: products.length,
+                      itemCount: displayedProducts.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
@@ -234,8 +189,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             childAspectRatio: 0.70,
                           ),
                       itemBuilder: (_, index) {
-                        final product = products[index];
-                        return ProductCard(product: product);
+                        final product = displayedProducts[index];
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailsScreen(product: product),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(16),
+                          child: ProductCard(product: product),
+                        );
                       },
                     );
                   },
@@ -244,10 +211,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNav(
-        currentIndex: currentIndex,
-        onTap: _onTabTapped,
       ),
     );
   }

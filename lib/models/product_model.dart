@@ -27,20 +27,50 @@ class ProductModel {
   });
 
   factory ProductModel.fromMap(Map<String, dynamic> map, String id) {
+    // Safe helper to parse double (price, rating)
+    double parseDouble(dynamic val) {
+      if (val is num) return val.toDouble();
+      if (val is String) return double.tryParse(val) ?? 0.0;
+      return 0.0;
+    }
+
+    // Safe helper to parse int (reviews)
+    int parseInt(dynamic val) {
+      if (val is num) return val.toInt();
+      if (val is String) return int.tryParse(val) ?? 0;
+      return 0;
+    }
+
+    // Safe helper to parse colors list
+    List<String> parseColors(dynamic val) {
+      if (val is List) return List<String>.from(val);
+      if (val is String) {
+        return val
+            .replaceAll('[', '')
+            .replaceAll(']', '')
+            .replaceAll("'", '')
+            .replaceAll('"', '')
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+      }
+      return [];
+    }
+
     return ProductModel(
       id: id,
-      name: map['name'] ?? '',
-      maker: map['maker'] ?? '',
-      description: map['description'] ?? '',
-      price: (map['price'] ?? 0).toDouble(),
-      category: map['category'] ?? '',
-      colors: List<String>.from(map['colors'] ?? []),
-      rating: (map['rating'] ?? 0).toDouble(),
-      reviews: map['reviews'] ?? 0,
-      imageUrl: map['imageUrl'] ?? '',
+      name: map['name']?.toString() ?? '',
+      maker: map['maker']?.toString() ?? '',
+      description: map['description']?.toString() ?? '',
+      price: parseDouble(map['price']),
+      category: map['category']?.toString() ?? '',
+      colors: parseColors(map['colors']),
+      rating: parseDouble(map['rating']),
+      reviews: parseInt(map['reviews']),
+      imageUrl: map['imageUrl']?.toString() ?? '',
     );
   }
-
   Map<String, dynamic> toMap() {
     return {
       'name': name,
