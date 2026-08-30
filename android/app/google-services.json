@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "481141840521",
+    "project_id": "directdeal-76a7c",
+    "storage_bucket": "directdeal-76a7c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481141840521:android:45cda6293a08dd7f38c458",
+        "android_client_info": {
+          "package_name": "com.example.clothing_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwG9N0q1G49NW4TsSwzsais5uA4h414mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481141840521:android:663d11b505b222f438c458",
+        "android_client_info": {
+          "package_name": "com.example.direct_deal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwG9N0q1G49NW4TsSwzsais5uA4h414mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
