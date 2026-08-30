@@ -1,29 +1,3 @@
-// class ProductModel {
-//   final String id;
-//   final String title;
-//   final String description;
-//   final double price;
-
-//   ProductModel({
-//     this.id = '',
-//     required this.title,
-//     required this.description,
-//     required this.price,
-//   });
-
-//   factory ProductModel.fromMap(Map<String, dynamic> map, String id) {
-//     return ProductModel(
-//       id: id,
-//       title: map['title'] ?? '',
-//       description: map['description'] ?? '',
-//       price: (map['price'] ?? 0).toDouble(),
-//     );
-//   }
-
-//   Map<String, dynamic> toMap() {
-//     return {'title': title, 'description': description, 'price': price};
-//   }
-// }
 class ProductModel {
   final String id;
   final String name;

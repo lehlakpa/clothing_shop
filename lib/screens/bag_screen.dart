@@ -5,9 +5,35 @@ import '../providers/cart_provider.dart';
 import '../widgets/app_colors.dart';
 import '../widgets/bottom_nav.dart';
 import '../widgets/swatch_widget.dart';
+import 'home_screen.dart';
+import 'profile_screen.dart';
 
 class BagScreen extends StatelessWidget {
   const BagScreen({super.key});
+
+  void _onTabTapped(BuildContext context, int index) {
+    if (index == 2) return; // Currently on Bag tab
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+        break;
+      case 1:
+        // Category / Search screen routing logic
+        break;
+      case 2:
+        break;
+      case 3:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const ProfileScreen()),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +41,9 @@ class BagScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.paper,
-
       appBar: AppBar(
         backgroundColor: AppColors.paper,
         elevation: 0,
-
         title: const Text(
           'Your bag',
           style: TextStyle(
@@ -29,7 +53,6 @@ class BagScreen extends StatelessWidget {
           ),
         ),
       ),
-
       body: Column(
         children: [
           Expanded(
@@ -42,23 +65,18 @@ class BagScreen extends StatelessWidget {
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 22),
-
                     itemCount: cart.items.length,
-
                     itemBuilder: (_, index) {
                       final item = cart.items[index];
 
                       return Container(
                         margin: const EdgeInsets.only(bottom: 10),
-
                         padding: const EdgeInsets.all(12),
-
                         decoration: BoxDecoration(
                           color: AppColors.cream,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.line),
                         ),
-
                         child: Row(
                           children: [
                             SizedBox(
@@ -69,9 +87,7 @@ class BagScreen extends StatelessWidget {
                                 radius: 12,
                               ),
                             ),
-
                             const SizedBox(width: 12),
-
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +101,6 @@ class BagScreen extends StatelessWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-
                                   Text(
                                     item.product.maker,
                                     style: const TextStyle(
@@ -93,30 +108,24 @@ class BagScreen extends StatelessWidget {
                                       color: AppColors.sub,
                                     ),
                                   ),
-
                                   const SizedBox(height: 8),
-
                                   Row(
                                     children: [
                                       _quantityButton(Icons.remove, () {
                                         cart.decrease(item.product.id);
                                       }),
-
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,
                                         ),
                                         child: Text('${item.quantity}'),
                                       ),
-
                                       _quantityButton(Icons.add, () {
                                         cart.increase(item.product.id);
                                       }),
-
                                       const Spacer(),
-
                                       Text(
-                                        '\$${item.total.toStringAsFixed(0)}',
+                                        '\$${item.totalPrice.toStringAsFixed(0)}',
                                         style: const TextStyle(
                                           color: AppColors.forest,
                                           fontWeight: FontWeight.bold,
@@ -127,7 +136,6 @@ class BagScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-
                             IconButton(
                               onPressed: () {
                                 cart.remove(item.product.id);
@@ -144,30 +152,26 @@ class BagScreen extends StatelessWidget {
                     },
                   ),
           ),
-
           _checkout(context, cart),
         ],
       ),
-
-      bottomNavigationBar: const BottomNav(currentIndex: 2, onTap: _dummy),
+      bottomNavigationBar: BottomNav(
+        currentIndex: 2,
+        onTap: (index) => _onTabTapped(context, index),
+      ),
     );
   }
-
-  static void _dummy(int index) {}
 
   Widget _quantityButton(IconData icon, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
-
       child: Container(
         width: 25,
         height: 25,
-
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.line),
           shape: BoxShape.circle,
         ),
-
         child: Icon(icon, size: 13),
       ),
     );
@@ -176,28 +180,21 @@ class BagScreen extends StatelessWidget {
   Widget _checkout(BuildContext context, CartProvider cart) {
     return Container(
       padding: const EdgeInsets.fromLTRB(22, 18, 22, 20),
-
       decoration: const BoxDecoration(
         color: AppColors.forestDark,
-
         borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
-
       child: Column(
         children: [
           _row('Subtotal', '\$${cart.subtotal.toStringAsFixed(2)}'),
-
           const SizedBox(height: 6),
-
           _row(
             'Shipping',
             cart.shipping == 0
                 ? 'Free'
                 : '\$${cart.shipping.toStringAsFixed(2)}',
           ),
-
           const Divider(color: Color(0xFF33473C)),
-
           Row(
             children: [
               Column(
@@ -211,7 +208,6 @@ class BagScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
                   Text(
                     '\$${cart.total.toStringAsFixed(2)}',
                     style: const TextStyle(
@@ -222,17 +218,13 @@ class BagScreen extends StatelessWidget {
                   ),
                 ],
               ),
-
               const Spacer(),
-
               ElevatedButton(
                 onPressed: cart.items.isEmpty ? null : () {},
-
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.gold,
                   foregroundColor: AppColors.forestDark,
                 ),
-
                 child: const Text('Checkout'),
               ),
             ],
@@ -245,13 +237,11 @@ class BagScreen extends StatelessWidget {
   Widget _row(String title, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
       children: [
         Text(
           title,
           style: const TextStyle(color: Color(0xFFB9C4BB), fontSize: 12.5),
         ),
-
         Text(
           value,
           style: const TextStyle(color: Color(0xFFB9C4BB), fontSize: 12.5),
