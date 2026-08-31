@@ -8,6 +8,24 @@ class AuthProvider extends ChangeNotifier {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
   bool _loading = false;
   bool get loading => _loading;
+  String? _token;
+  bool _isCheckingAuth = true;
+  String? get token => _token;
+  bool get isCheckingAuth => _isCheckingAuth;
+
+  Future<void> checkAuth() async {
+    _token = await _storage.read(key: 'accessToken');
+
+    _isCheckingAuth = false;
+    notifyListeners();
+  }
+
+  Future<void> saveToken(String token) async {
+    await _storage.write(key: 'accessToken', value: token);
+
+    _token = token;
+    notifyListeners();
+  }
 
   Future<bool> login(String username, String password) async {
     _loading = true;

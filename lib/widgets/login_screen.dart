@@ -32,13 +32,13 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (success) {
-      // Go to HomeScreen
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => CustomNavigation()),
+        MaterialPageRoute(builder: (context) => const CustomNavigation()),
+        (route) => false,
       );
     } else {
-      print("failed");
+      throw Exception("Failed");
     }
     // if (_formKey.currentState!.validate()) {
     //   // Process login logic (e.g., API call)
