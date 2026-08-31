@@ -20,12 +20,12 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveToken(String token) async {
-    await _storage.write(key: 'accessToken', value: token);
+  // Future<void> saveToken(String token) async {
+  //   await _storage.write(key: 'accessToken', value: token);
 
-    _token = token;
-    notifyListeners();
-  }
+  //   _token = token;
+  //   notifyListeners();
+  // }
 
   Future<bool> login(String username, String password) async {
     _loading = true;

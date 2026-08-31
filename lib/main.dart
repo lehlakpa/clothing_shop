@@ -1,7 +1,5 @@
 import 'package:clothing_shop/providers/auth_provider.dart';
 import 'package:clothing_shop/providers/banner_provider.dart';
-import 'package:clothing_shop/widgets/custom_navigation.dart';
-import 'package:clothing_shop/widgets/login_screen.dart';
 import 'package:clothing_shop/wrapper/auth_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
