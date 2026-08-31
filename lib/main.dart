@@ -1,5 +1,7 @@
+import 'package:clothing_shop/providers/auth_provider.dart';
 import 'package:clothing_shop/providers/banner_provider.dart';
 import 'package:clothing_shop/widgets/custom_navigation.dart';
+import 'package:clothing_shop/widgets/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +24,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => BannerProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: const KiooApp(),
     ),
@@ -47,7 +50,7 @@ class KiooApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: CustomNavigation(),
+      home: LoginPage(),
     );
   }
 }

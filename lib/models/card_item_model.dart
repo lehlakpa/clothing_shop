@@ -1,48 +1,33 @@
-import 'package:clothing_shop/models/product_model.dart';
+import 'product_model.dart';
 
 class CartItemModel {
-  final String id;
   final ProductModel product;
   final int quantity;
   final String selectedColor;
 
-  CartItemModel({
-    this.id = '',
+  const CartItemModel({
     required this.product,
-    this.quantity = 1,
+    required this.quantity,
     this.selectedColor = '',
   });
 
-  /// Calculates total price for this cart item based on quantity
+  // Calculate total price for this cart item
   double get totalPrice => product.price * quantity;
 
-  /// Creates a copy of CartItemModel with updated fields
+  // Create a new CartItemModel with changed values
   CartItemModel copyWith({
-    String? id,
     ProductModel? product,
     int? quantity,
     String? selectedColor,
   }) {
     return CartItemModel(
-      id: id ?? this.id,
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,
       selectedColor: selectedColor ?? this.selectedColor,
     );
   }
 
-  factory CartItemModel.fromMap(Map<String, dynamic> map, String id) {
-    return CartItemModel(
-      id: id,
-      product: ProductModel.fromMap(
-        map['product'] as Map<String, dynamic>? ?? {},
-        map['productId'] ?? '',
-      ),
-      quantity: map['quantity'] ?? 1,
-      selectedColor: map['selectedColor'] ?? '',
-    );
-  }
-
+  // Convert cart item to Map
   Map<String, dynamic> toMap() {
     return {
       'productId': product.id,
@@ -50,5 +35,21 @@ class CartItemModel {
       'quantity': quantity,
       'selectedColor': selectedColor,
     };
+  }
+
+  // Create CartItemModel from Map
+  factory CartItemModel.fromMap(Map<String, dynamic> map) {
+    final productMap = Map<String, dynamic>.from(map['product'] as Map? ?? {});
+
+    return CartItemModel(
+      product: ProductModel.fromMap(
+        productMap,
+        map['productId']?.toString() ?? '',
+      ),
+
+      quantity: (map['quantity'] as num?)?.toInt() ?? 1,
+
+      selectedColor: map['selectedColor']?.toString() ?? '',
+    );
   }
 }
