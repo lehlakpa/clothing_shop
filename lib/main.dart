@@ -24,6 +24,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()..getProfile()),
         ChangeNotifierProvider(create: (_) => AuthProvider()..checkAuth()),
       ],
       child: const KiooApp(),

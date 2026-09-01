@@ -6,12 +6,18 @@ import 'package:http/http.dart' as http;
 
 class AuthProvider extends ChangeNotifier {
   final FlutterSecureStorage _storage = FlutterSecureStorage();
+
   bool _loading = false;
   bool get loading => _loading;
+
   String? _token;
-  bool _isCheckingAuth = true;
   String? get token => _token;
+
+  bool _isCheckingAuth = true;
   bool get isCheckingAuth => _isCheckingAuth;
+
+  Map<String, dynamic>? _profile;
+  Map<String, dynamic>? get profile => _profile;
 
   Future<void> checkAuth() async {
     _token = await _storage.read(key: 'accessToken');
@@ -19,13 +25,6 @@ class AuthProvider extends ChangeNotifier {
     _isCheckingAuth = false;
     notifyListeners();
   }
-
-  // Future<void> saveToken(String token) async {
-  //   await _storage.write(key: 'accessToken', value: token);
-
-  //   _token = token;
-  //   notifyListeners();
-  // }
 
   Future<bool> login(String username, String password) async {
     _loading = true;
@@ -44,9 +43,11 @@ class AuthProvider extends ChangeNotifier {
         final data = jsonDecode(response.body);
         final accessToken = data["accessToken"];
         await _storage.write(key: "accessToken", value: accessToken);
+        _token = accessToken;
+        notifyListeners();
         return true;
       }
-      return true;
+      return false;
     } catch (e) {
       return false;
     } finally {
@@ -59,7 +60,37 @@ class AuthProvider extends ChangeNotifier {
     return await _storage.read(key: "accessToken");
   }
 
+  Future<bool> getProfile() async {
+    try {
+      final accessToken = await _storage.read(key: "accessToken");
+      if (accessToken == null) {
+        return false;
+      }
+      final response = await http.get(
+        Uri.parse('https://dummyjson.com/auth/me'),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        _profile = data as Map<String, dynamic>;
+        _token = accessToken;
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     await _storage.delete(key: "accessToken");
+    _token = null;
+    _profile = null;
+    notifyListeners();
   }
 }

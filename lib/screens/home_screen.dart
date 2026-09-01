@@ -111,33 +111,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 // BANNER
                 const BannerSlider(),
 
-                const SizedBox(height: 22),
+                const SizedBox(height: 26),
 
-                // PRODUCT HEADER
+                // NEW FEATURES — plain sans-serif label, quiet text link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text(
+                  children: [
+                    const Text(
                       'New Features',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         color: AppColors.ink,
                         fontWeight: FontWeight.w600,
-                        fontFamily: 'serif',
                       ),
                     ),
-                    Text(
-                      'See all',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: AppColors.teal,
-                        fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Text(
+                        'See all',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.sub,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 14),
 
                 // PRODUCTS STREAM
                 StreamBuilder<List<ProductModel>>(
@@ -149,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         padding: EdgeInsets.all(30),
                         child: Center(
                           child: CircularProgressIndicator(
-                            color: Colors.blueAccent,
+                            color: AppColors.forest,
                           ),
                         ),
                       );
@@ -158,8 +160,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasError) {
                       return const Padding(
                         padding: EdgeInsets.all(30),
-
-                        child: Center(child: Text('Something went wrong')),
+                        child: Center(
+                          child: Text(
+                            'Something went wrong',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.sub,
+                            ),
+                          ),
+                        ),
                       );
                     }
 
@@ -172,7 +181,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       return const Padding(
                         padding: EdgeInsets.all(30),
                         child: Center(
-                          child: Text('No products available right now.'),
+                          child: Text(
+                            'No products available right now.',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.sub,
+                            ),
+                          ),
                         ),
                       );
                     }
@@ -184,8 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 14,
+                            mainAxisSpacing: 16,
                             childAspectRatio: 0.70,
                           ),
                       itemBuilder: (_, index) {
@@ -200,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(12),
                           child: ProductCard(product: product),
                         );
                       },
