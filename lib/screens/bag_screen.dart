@@ -97,7 +97,30 @@ class BagScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
             clipBehavior: Clip.antiAlias,
-            child: SwatchWidget(colors: item.product.colors, radius: 15),
+            child: (item.product.imageUrl != null &&
+                    (item.product.imageUrl as String).trim().isNotEmpty)
+                ? Image.network(
+                    item.product.imageUrl as String,
+                    fit: BoxFit.cover,
+                    width: 92,
+                    height: 110,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.forest,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) =>
+                        SwatchWidget(colors: item.product.colors, radius: 15),
+                  )
+                : SwatchWidget(colors: item.product.colors, radius: 15),
           ),
 
           const SizedBox(width: 14),
@@ -388,7 +411,7 @@ class BagScreen extends StatelessWidget {
           BoxShadow(
             blurRadius: 20,
             offset: const Offset(0, -5),
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
           ),
         ],
       ),

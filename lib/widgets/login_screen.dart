@@ -292,9 +292,9 @@ class _LoginPageState extends State<LoginPage> {
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: _Palette.error.withOpacity(0.08),
+        color: _Palette.error.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: _Palette.error.withOpacity(0.25)),
+        border: Border.all(color: _Palette.error.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [

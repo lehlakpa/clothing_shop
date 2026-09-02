@@ -44,7 +44,7 @@ class _CustomNavigationState extends State<CustomNavigation> {
       body: IndexedStack(index: _currentindex, children: _screens),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 20, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Container(
             height: 64,
             decoration: BoxDecoration(
@@ -52,7 +52,7 @@ class _CustomNavigationState extends State<CustomNavigation> {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -68,12 +68,11 @@ class _CustomNavigationState extends State<CustomNavigation> {
                     HapticFeedback.lightImpact();
                     setState(() {
                       _currentindex = index;
-                      return;
                     });
                   },
                   behavior: HitTestBehavior.opaque,
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 250),
                     curve: Curves.easeOutCubic,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -81,7 +80,7 @@ class _CustomNavigationState extends State<CustomNavigation> {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Colors.blue.withOpacity(0.12)
+                          ? const Color(0xFF223B2E).withValues(alpha: 0.12)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -90,21 +89,23 @@ class _CustomNavigationState extends State<CustomNavigation> {
                       children: [
                         AnimatedScale(
                           scale: isSelected ? 1.15 : 1.0,
-                          duration: Duration(microseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           child: Icon(
                             isSelected ? item.selectedIcon : item.icon,
-                            color: isSelected ? Colors.blue : Colors.grey[600],
+                            color: isSelected
+                                ? const Color(0xFF223B2E)
+                                : Colors.grey[600],
                             size: 24,
                           ),
                         ),
                         if (isSelected) ...[
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             item.label,
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                            style: const TextStyle(
+                              color: Color(0xFF223B2E),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13.5,
                             ),
                           ),
                         ],

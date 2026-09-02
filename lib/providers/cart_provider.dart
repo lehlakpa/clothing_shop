@@ -25,9 +25,9 @@ class CartProvider extends ChangeNotifier {
   /// a spinner instead of flashing an empty cart on launch.
   bool get isLoading => _isLoading;
 
-  int get itemCount => _items.fold(0, (sum, item) => sum + item.quantity);
+  int get itemCount => _items.fold(0, (acc, item) => acc + item.quantity);
 
-  double get subtotal => _items.fold(0, (sum, item) => sum + item.totalPrice);
+  double get subtotal => _items.fold(0, (acc, item) => acc + item.totalPrice);
 
   double get shipping {
     if (_items.isEmpty) return 0;

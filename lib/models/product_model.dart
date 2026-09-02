@@ -84,4 +84,30 @@ class ProductModel {
       'imageUrl': imageUrl,
     };
   }
+
+  ProductModel copyWith({
+    String? id,
+    String? name,
+    String? maker,
+    String? description,
+    double? price,
+    String? category,
+    List<String>? colors,
+    double? rating,
+    int? reviews,
+    String? imageUrl,
+  }) {
+    return ProductModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      maker: maker ?? this.maker,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      category: category ?? this.category,
+      colors: colors ?? this.colors,
+      rating: rating ?? this.rating,
+      reviews: reviews ?? this.reviews,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
+  }
 }
