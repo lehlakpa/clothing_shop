@@ -1,3 +1,4 @@
+import 'package:clothing_shop/screens/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,12 +15,12 @@ class BagScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.paper,
-
       appBar: AppBar(
         backgroundColor: AppColors.paper,
         elevation: 0,
         centerTitle: false,
         titleSpacing: 22,
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -97,7 +98,8 @@ class BagScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
             clipBehavior: Clip.antiAlias,
-            child: (item.product.imageUrl != null &&
+            child:
+                (item.product.imageUrl != null &&
                     (item.product.imageUrl as String).trim().isNotEmpty)
                 ? Image.network(
                     item.product.imageUrl as String,
@@ -452,7 +454,10 @@ class BagScreen extends StatelessWidget {
                 onPressed: cart.items.isEmpty
                     ? null
                     : () {
-                        // Checkout
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => LocationScreen()),
+                        );
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.gold,

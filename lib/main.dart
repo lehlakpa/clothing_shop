@@ -1,5 +1,8 @@
+import 'package:clothing_shop/practise_screens/auth_wrapper.dart';
+import 'package:clothing_shop/practise_screens/practise_provider.dart';
 import 'package:clothing_shop/providers/auth_provider.dart';
 import 'package:clothing_shop/providers/banner_provider.dart';
+import 'package:clothing_shop/providers/location_provider.dart';
 import 'package:clothing_shop/widgets/custom_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +27,10 @@ void main() async {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => PractiseProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()..getProfile()),
         ChangeNotifierProvider(create: (_) => AuthProvider()..checkAuth()),
+        ChangeNotifierProvider(create: (_) => LocationProvider()),
       ],
       child: const KiooApp(),
     ),
@@ -39,21 +44,16 @@ class KiooApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Kioo',
+      title: 'lakpa JI',
 
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF6F1E6),
-
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF223B2E)),
-
         fontFamily: 'Manrope',
-
         useMaterial3: true,
       ),
 
-      home: CustomNavigation(),
-      // ImagePickerScreen(),
-      //  AuthWrapper(),
+      home: const CustomNavigation(),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:clothing_shop/providers/auth_provider.dart';
+import 'package:clothing_shop/screens/login_screen.dart';
 import 'package:clothing_shop/widgets/custom_navigation.dart';
-import 'package:clothing_shop/widgets/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

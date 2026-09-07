@@ -204,7 +204,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
-                    separatorBuilder: (context, index) => const SizedBox(width: 8),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 8),
                     itemBuilder: (context, index) {
                       final category = categories[index];
                       final isSelected =
@@ -254,9 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 18),
 
-                // ===================================
-                // PRODUCTS STREAM & GRID
-                // ===================================
                 StreamBuilder<List<ProductModel>>(
                   stream: productProvider.productsStream(),
                   builder: (context, snapshot) {
@@ -295,11 +293,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     final query = searchController.text.toLowerCase().trim();
 
                     final displayedProducts = allItems.where((product) {
-                      final matchesCategory = selectedCategory == 'All' ||
+                      final matchesCategory =
+                          selectedCategory == 'All' ||
                           product.category.trim().toLowerCase() ==
                               selectedCategory.trim().toLowerCase();
 
-                      final matchesQuery = query.isEmpty ||
+                      final matchesQuery =
+                          query.isEmpty ||
                           product.name.toLowerCase().contains(query) ||
                           product.category.toLowerCase().contains(query) ||
                           product.description.toLowerCase().contains(query) ||

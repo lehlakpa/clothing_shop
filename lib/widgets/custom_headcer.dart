@@ -1,3 +1,4 @@
+import 'package:clothing_shop/screens/location_screen.dart';
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
@@ -35,22 +36,52 @@ class HeaderSection extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          width: 42,
-          height: 42,
-          decoration: const BoxDecoration(
-            color: AppColors.forest,
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            userName.isNotEmpty ? userName[0].toUpperCase() : '',
-            style: const TextStyle(
-              color: AppColors.paper,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            // Location Button
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LocationScreen()),
+                );
+              },
+              child: Container(
+                width: 42,
+                height: 42,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.cream,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.line),
+                ),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.location_on_outlined,
+                  color: AppColors.forest,
+                  size: 20,
+                ),
+              ),
             ),
-          ),
+            // Avatar
+            Container(
+              width: 42,
+              height: 42,
+              decoration: const BoxDecoration(
+                color: AppColors.forest,
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                userName.isNotEmpty ? userName[0].toUpperCase() : '',
+                style: const TextStyle(
+                  color: AppColors.paper,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
