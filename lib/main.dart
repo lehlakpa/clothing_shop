@@ -1,9 +1,9 @@
-import 'package:clothing_shop/practise_screens/auth_wrapper.dart';
 import 'package:clothing_shop/practise_screens/practise_provider.dart';
 import 'package:clothing_shop/providers/auth_provider.dart';
 import 'package:clothing_shop/providers/banner_provider.dart';
 import 'package:clothing_shop/providers/location_provider.dart';
-import 'package:clothing_shop/widgets/custom_navigation.dart';
+// import 'package:clothing_shop/widgets/custom_navigation.dart';
+import 'package:clothing_shop/wrapper/auth_wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,7 +53,7 @@ class KiooApp extends StatelessWidget {
         useMaterial3: true,
       ),
 
-      home: const CustomNavigation(),
+      home: const AuthWrapper(),
     );
   }
 }
